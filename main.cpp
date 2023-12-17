@@ -53,7 +53,7 @@ public:
     }
 
     BankAccount *findAccount(std::string accountNumber){
-        BankAccount *ret = NULL;
+        BankAccount *ret = nullptr;
         for(BankAccount &account : accounts){
             if(account.getAccountNumber() == accountNumber ){
                 ret = &account;                                        
