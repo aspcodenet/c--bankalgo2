@@ -61,6 +61,64 @@ public:
     }
 
 };
+class DistributedVectorAccountStorage : public IAccountStorage{
+    std::vector<BankAccount> accountsStartingWith0;
+    std::vector<BankAccount> accountsStartingWith1;
+    std::vector<BankAccount> accountsStartingWith2;
+    std::vector<BankAccount> accountsStartingWith3;
+    std::vector<BankAccount> accountsStartingWith4;
+    std::vector<BankAccount> accountsStartingWith5;
+    std::vector<BankAccount> accountsStartingWith6;
+    std::vector<BankAccount> accountsStartingWith7;
+    std::vector<BankAccount> accountsStartingWith8;
+    std::vector<BankAccount> accountsStartingWith9;
+    std::vector<BankAccount> empty;
+
+    std::vector<BankAccount> &getRef(char firstChar){
+
+        switch(firstChar){
+            case '0':
+                return accountsStartingWith0;
+            case '1':
+                return  accountsStartingWith1;
+            case '2':
+                return accountsStartingWith2;
+            case '3':
+                return accountsStartingWith3;
+            case '4':
+                return accountsStartingWith4;
+            case '5':
+                return  accountsStartingWith5;
+            case '6':
+                return accountsStartingWith6;
+            case '7':
+                return accountsStartingWith7;
+            case '8':
+                return accountsStartingWith8;
+            case '9':
+                return  accountsStartingWith9;
+        }
+        return empty;
+    }
+
+
+public:
+
+    void addAccount(BankAccount account) override{
+        std::vector<BankAccount> &ref = getRef(account.getAccountNumber()[0]);
+        ref.push_back(account);
+    }
+    BankAccount *findAccount(std::string accountNumber){
+        std::vector<BankAccount> &ref = getRef(accountNumber[0]);
+        BankAccount *ret = nullptr;
+        for(BankAccount &account : ref){
+            if(account.getAccountNumber() == accountNumber ){
+                return &account;                                        
+            }
+        }
+        return ret;
+    }
+};
 
 class VectorAccountStorage: public IAccountStorage{
         std::vector<BankAccount> accounts;
@@ -86,7 +144,8 @@ public:
 
 int main(int, char**){
     //VectorAccountStorage storage;
-    MapAccountStorage storage;
+    DistributedVectorAccountStorage storage;
+    //MapAccountStorage storage;
     Bank bank(&storage);
 
     const int AntalAccounts =  1000000;
