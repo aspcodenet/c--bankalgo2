@@ -10,7 +10,7 @@ class BankAccount{
 public:
     BankAccount(){
     }
-    
+
     BankAccount(std::string accountNumber, float balance = 0)
     :accountNumber(accountNumber),balance(balance)
     {
