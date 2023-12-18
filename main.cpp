@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <map>
 #include <random>
 #include <chrono>
 
@@ -7,6 +8,9 @@ class BankAccount{
     std::string accountNumber;
     float balance;
 public:
+    BankAccount(){
+    }
+    
     BankAccount(std::string accountNumber, float balance = 0)
     :accountNumber(accountNumber),balance(balance)
     {
@@ -18,6 +22,7 @@ public:
     }
 };
 
+//INTERFACE - gränssnitt "standard"
 class IAccountStorage {
 public:    
     virtual void addAccount(BankAccount account) = 0;
@@ -45,6 +50,18 @@ public:
     }
 };
 
+class MapAccountStorage: public IAccountStorage{
+    std::map<std::string,BankAccount> accounts;
+public:
+    void addAccount(BankAccount account) override{
+        accounts[account.getAccountNumber()] = account;
+    }
+    BankAccount *findAccount(std::string accountNumber){
+        return &(accounts[accountNumber]);
+    }
+
+};
+
 class VectorAccountStorage: public IAccountStorage{
         std::vector<BankAccount> accounts;
 public:
@@ -56,7 +73,7 @@ public:
         BankAccount *ret = nullptr;
         for(BankAccount &account : accounts){
             if(account.getAccountNumber() == accountNumber ){
-                ret = &account;                                        
+                return &account;                                        
             }
         }
         return ret;
@@ -68,7 +85,8 @@ public:
 
 
 int main(int, char**){
-    VectorAccountStorage storage;
+    //VectorAccountStorage storage;
+    MapAccountStorage storage;
     Bank bank(&storage);
 
     const int AntalAccounts =  1000000;
@@ -77,6 +95,7 @@ int main(int, char**){
     std::string sFirst = ""; 
     std::string sLast = ""; 
     std::string sNotFound = "notfound"; 
+
     std::cout << "INITIALIZE: " << std::endl;
     auto startTime = std::chrono::high_resolution_clock::now();
     for(int i = 0;i < AntalAccounts; i++){
@@ -87,8 +106,9 @@ int main(int, char**){
         if(i == AntalAccounts-1){
             sLast = accountNumber;
         }
-        bank.addAccount(std::to_string(i));
+        bank.addAccount(accountNumber);
     }
+
     auto endTime = std::chrono::high_resolution_clock::now();
     std::cout << "INIT Took: " << std::chrono::duration_cast<std::chrono::milliseconds>(endTime    - startTime).count() << " milliseconds" << std::endl;
 
