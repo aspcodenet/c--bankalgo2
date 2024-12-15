@@ -79,7 +79,7 @@ int main(int, char**){
     //MapAccountStorage storage;
     Bank bank(&storage);
 
-    const int AntalAccounts =  1000000;
+    const int AntalAccounts =  10000000;
 
 
     std::string sFirst = ""; 
