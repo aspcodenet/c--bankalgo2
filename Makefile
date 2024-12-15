@@ -15,19 +15,11 @@ else
 endif
 
 
-OBJS =  $(addprefix $(OUTPUTDIR)/,$(SOURCES:.cpp=.o))
+OBJS =  $(SOURCES:.cpp=.o)
 
-$(PROG): $(OUTPUTDIR) $(OBJS) 
+$(PROG): $(OBJS) 
 	$(CC) $(CFLAGS) -o $(PROG) $(OBJS)
 
-$(OUTPUTDIR)/%.o: %.cpp $(DEPS)
+$%.o: %.cpp $(DEPS)
 	$(CC) $(CFLAGS) -o $@ -c $< 
 
-clean:
-	@del /q "$(OUTPUTDIR)" 
-	@del /q $(PROG)
-
-$(OUTPUTDIR):
-	@mkdir "$(OUTPUTDIR)"
-
-.PHONY: clean test
